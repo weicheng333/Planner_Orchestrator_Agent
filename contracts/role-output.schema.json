@@ -1,0 +1,491 @@
+{
+  "$defs": {
+    "AcceptanceCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "statement": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "critical": {
+          "default": false,
+          "title": "Critical",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "statement"
+      ],
+      "title": "AcceptanceCriterion",
+      "type": "object"
+    },
+    "Budget": {
+      "additionalProperties": false,
+      "properties": {
+        "deadline_ms": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deadline Ms"
+        },
+        "max_tool_calls": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Tool Calls"
+        },
+        "max_tokens": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Tokens"
+        },
+        "max_cost": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Cost"
+        }
+      },
+      "title": "Budget",
+      "type": "object"
+    },
+    "CostEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "estimated_tool_calls": {
+          "minimum": 0,
+          "title": "Estimated Tool Calls",
+          "type": "integer"
+        },
+        "estimated_tokens": {
+          "minimum": 0,
+          "title": "Estimated Tokens",
+          "type": "integer"
+        },
+        "estimated_cost_units": {
+          "minimum": 0,
+          "title": "Estimated Cost Units",
+          "type": "number"
+        }
+      },
+      "required": [
+        "estimated_tool_calls",
+        "estimated_tokens",
+        "estimated_cost_units"
+      ],
+      "title": "CostEstimate",
+      "type": "object"
+    },
+    "NodeRisk": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "title": "NodeRisk",
+      "type": "string"
+    },
+    "PermissionBoundary": {
+      "additionalProperties": false,
+      "properties": {
+        "available": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Available",
+          "type": "array"
+        },
+        "requires_approval": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Requires Approval",
+          "type": "array"
+        },
+        "denied": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Denied",
+          "type": "array"
+        }
+      },
+      "title": "PermissionBoundary",
+      "type": "object"
+    },
+    "PlanNode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "objective": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Objective",
+          "type": "string"
+        },
+        "routing_reason": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Routing Reason",
+          "type": "string"
+        },
+        "dependencies": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "assigned_capability": {
+          "enum": [
+            "workflow",
+            "research",
+            "executor",
+            "verifier",
+            "human"
+          ],
+          "title": "Assigned Capability",
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Tools",
+          "type": "array"
+        },
+        "input_refs": {
+          "items": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+            "type": "string"
+          },
+          "title": "Input Refs",
+          "type": "array"
+        },
+        "expected_output_schema": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+          "title": "Expected Output Schema",
+          "type": "string"
+        },
+        "produces_acceptance_criteria": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+            "type": "string"
+          },
+          "title": "Produces Acceptance Criteria",
+          "type": "array"
+        },
+        "checks_acceptance_criteria": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+            "type": "string"
+          },
+          "title": "Checks Acceptance Criteria",
+          "type": "array"
+        },
+        "evidence_requirements": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Evidence Requirements",
+          "type": "array"
+        },
+        "permissions_required": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Permissions Required",
+          "type": "array"
+        },
+        "estimated_cost": {
+          "$ref": "#/$defs/CostEstimate"
+        },
+        "risk": {
+          "$ref": "#/$defs/NodeRisk"
+        },
+        "parallel_group": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parallel Group"
+        },
+        "side_effecting": {
+          "default": false,
+          "title": "Side Effecting",
+          "type": "boolean"
+        },
+        "failure_action": {
+          "enum": [
+            "RETRY",
+            "REPLAN",
+            "REQUEST_APPROVAL",
+            "ESCALATE",
+            "COMPENSATE"
+          ],
+          "title": "Failure Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "objective",
+        "routing_reason",
+        "assigned_capability",
+        "expected_output_schema",
+        "estimated_cost",
+        "risk",
+        "failure_action"
+      ],
+      "title": "PlanNode",
+      "type": "object"
+    },
+    "PlanStatus": {
+      "enum": [
+        "DRAFT",
+        "VALIDATED",
+        "APPROVAL_REQUIRED",
+        "READY",
+        "SUPERSEDED"
+      ],
+      "title": "PlanStatus",
+      "type": "string"
+    },
+    "RetryLimits": {
+      "additionalProperties": false,
+      "properties": {
+        "max_agent_hops": {
+          "default": 12,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Max Agent Hops",
+          "type": "integer"
+        },
+        "max_same_agent_retries": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Max Same Agent Retries",
+          "type": "integer"
+        },
+        "max_verifier_cycles": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Max Verifier Cycles",
+          "type": "integer"
+        },
+        "max_replans": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Max Replans",
+          "type": "integer"
+        },
+        "max_schema_retries": {
+          "default": 1,
+          "maximum": 3,
+          "minimum": 0,
+          "title": "Max Schema Retries",
+          "type": "integer"
+        }
+      },
+      "title": "RetryLimits",
+      "type": "object"
+    },
+    "Strategy": {
+      "enum": [
+        "SINGLE_MODEL",
+        "SINGLE_AGENT_TOOLS",
+        "MULTI_AGENT"
+      ],
+      "title": "Strategy",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "pattern": "^TASK-[A-Z0-9][A-Z0-9_-]{2,63}$",
+      "title": "Task Id",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "previous_plan_ref": {
+      "anyOf": [
+        {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Previous Plan Ref"
+    },
+    "task_spec_ref": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+      "title": "Task Spec Ref",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/PlanStatus"
+    },
+    "selected_strategy": {
+      "$ref": "#/$defs/Strategy"
+    },
+    "strategy_reason": {
+      "maxLength": 8000,
+      "minLength": 1,
+      "title": "Strategy Reason",
+      "type": "string"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/PlanNode"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "title": "Nodes",
+      "type": "array"
+    },
+    "acceptance_criteria": {
+      "items": {
+        "$ref": "#/$defs/AcceptanceCriterion"
+      },
+      "minItems": 1,
+      "title": "Acceptance Criteria",
+      "type": "array"
+    },
+    "permissions": {
+      "$ref": "#/$defs/PermissionBoundary"
+    },
+    "budget": {
+      "$ref": "#/$defs/Budget"
+    },
+    "retry_limits": {
+      "$ref": "#/$defs/RetryLimits"
+    },
+    "termination_conditions": {
+      "items": {
+        "maxLength": 8000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Termination Conditions",
+      "type": "array"
+    },
+    "replan_conditions": {
+      "items": {
+        "maxLength": 8000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Replan Conditions",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "version",
+    "task_spec_ref",
+    "status",
+    "selected_strategy",
+    "strategy_reason",
+    "nodes",
+    "acceptance_criteria",
+    "termination_conditions",
+    "replan_conditions",
+    "created_at"
+  ],
+  "title": "ExecutionPlan",
+  "type": "object"
+}

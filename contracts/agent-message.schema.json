@@ -1,0 +1,273 @@
+{
+  "$defs": {
+    "Budget": {
+      "additionalProperties": false,
+      "properties": {
+        "deadline_ms": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deadline Ms"
+        },
+        "max_tool_calls": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Tool Calls"
+        },
+        "max_tokens": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Tokens"
+        },
+        "max_cost": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Cost"
+        }
+      },
+      "title": "Budget",
+      "type": "object"
+    },
+    "ErrorDetail": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable"
+      ],
+      "title": "ErrorDetail",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "trace_id": {
+      "pattern": "^TRACE-[A-Z0-9][A-Z0-9_-]{2,63}$",
+      "title": "Trace Id",
+      "type": "string"
+    },
+    "task_id": {
+      "pattern": "^TASK-[A-Z0-9][A-Z0-9_-]{2,63}$",
+      "title": "Task Id",
+      "type": "string"
+    },
+    "parent_task_id": {
+      "anyOf": [
+        {
+          "pattern": "^TASK-[A-Z0-9][A-Z0-9_-]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Task Id"
+    },
+    "sender": {
+      "enum": [
+        "intake_spec",
+        "planner_orchestrator",
+        "research",
+        "executor",
+        "verifier",
+        "human"
+      ],
+      "title": "Sender",
+      "type": "string"
+    },
+    "recipient": {
+      "enum": [
+        "intake_spec",
+        "planner_orchestrator",
+        "research",
+        "executor",
+        "verifier",
+        "human"
+      ],
+      "title": "Recipient",
+      "type": "string"
+    },
+    "message_type": {
+      "enum": [
+        "TASK",
+        "RESULT",
+        "EVIDENCE",
+        "REVISION_REQUEST",
+        "APPROVAL_REQUEST",
+        "APPROVAL_RESULT",
+        "ERROR",
+        "STATUS"
+      ],
+      "title": "Message Type",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PENDING",
+        "RUNNING",
+        "BLOCKED",
+        "SUCCEEDED",
+        "FAILED",
+        "ESCALATED"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "objective": {
+      "maxLength": 8000,
+      "minLength": 1,
+      "title": "Objective",
+      "type": "string"
+    },
+    "input_refs": {
+      "items": {
+        "maxLength": 1024,
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+        "type": "string"
+      },
+      "title": "Input Refs",
+      "type": "array"
+    },
+    "constraints": {
+      "items": {
+        "maxLength": 8000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Constraints",
+      "type": "array"
+    },
+    "permissions": {
+      "items": {
+        "maxLength": 8000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Permissions",
+      "type": "array"
+    },
+    "budget": {
+      "$ref": "#/$defs/Budget"
+    },
+    "acceptance_criteria": {
+      "items": {
+        "maxLength": 8000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Acceptance Criteria",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "items": {
+        "maxLength": 1024,
+        "minLength": 1,
+        "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ErrorDetail"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "next_action": {
+      "anyOf": [
+        {
+          "maxLength": 8000,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Next Action"
+    }
+  },
+  "required": [
+    "trace_id",
+    "task_id",
+    "sender",
+    "recipient",
+    "message_type",
+    "status",
+    "objective"
+  ],
+  "title": "AgentMessage",
+  "type": "object"
+}
