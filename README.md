@@ -4,6 +4,12 @@
 
 本项目只负责规划、路由、预算、权限门、终止条件和 replan；不替代 Research、Executor 或 Verifier 执行任务。
 
+## 1.1.0 技术方案门
+
+Planner 在拆解任务前主动检查相关技术选型，比较可行方案并说明取舍、费用依据与推荐；外部事实交 Research 取证。用户确认技术方案不等于授权开发或部署。若选型改变产品需求，返回 Intake 修订。
+
+ExecutionPlan 新增可选 technical_review 与节点 technical_decision_ids。新规划须显式记录审查；历史计划仍可读取，数据库无需迁移。已有未定选型且包含 executor 的完整计划不能标记 READY；研究阶段可独立规划。MCP 校验结构、证据引用及状态门，不保证模型已经穷尽维度，也不独立证明确认引用的真实性。
+
 ## 组成
 
 - `.codex/agents/planner_orchestrator.toml`：Custom Agent

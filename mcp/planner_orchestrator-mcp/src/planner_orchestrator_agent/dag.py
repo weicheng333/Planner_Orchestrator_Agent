@@ -21,6 +21,17 @@ def validate_execution_plan(plan: ExecutionPlan) -> list[DagIssue]:
     issues: list[DagIssue] = []
     nodes = {node.id: node for node in plan.nodes}
     criterion_map = {criterion.id: criterion for criterion in plan.acceptance_criteria}
+    decisions = {item.id: item for item in plan.technical_review.decisions} if plan.technical_review else {}
+
+    for node in plan.nodes:
+        for identifier in node.technical_decision_ids:
+            if identifier not in decisions:
+                issues.append(DagIssue("UNKNOWN_TECHNICAL_DECISION", f"节点 {node.id} 引用了未知技术决定 {identifier}", ["nodes", node.id, "technical_decision_ids"]))
+            elif node.assigned_capability == "executor" and plan.status == "READY" and decisions[identifier].status != "CONFIRMED":
+                issues.append(DagIssue("TECHNICAL_CONFIRMATION_REQUIRED", f"节点 {node.id} 依赖的选型 {identifier} 尚未确认", ["nodes", node.id, "technical_decision_ids"]))
+    if plan.status == "READY" and any(node.assigned_capability == "executor" for node in plan.nodes):
+        if any(item.status != "CONFIRMED" for item in decisions.values()):
+            issues.append(DagIssue("TECHNICAL_REVIEW_PENDING", "存在执行节点且技术选型未定，完整实施计划不能标记 READY；可先生成研究阶段计划", ["technical_review"]))
 
     for node in plan.nodes:
         for dependency in node.dependencies:

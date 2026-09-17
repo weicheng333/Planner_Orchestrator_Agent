@@ -281,6 +281,14 @@
           "title": "Side Effecting",
           "type": "boolean"
         },
+        "technical_decision_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+            "type": "string"
+          },
+          "title": "Technical Decision Ids",
+          "type": "array"
+        },
         "failure_action": {
           "enum": [
             "RETRY",
@@ -367,6 +375,199 @@
       ],
       "title": "Strategy",
       "type": "string"
+    },
+    "TechnicalDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "dimension": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Dimension",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "RESEARCH_REQUIRED",
+            "AWAITING_CONFIRMATION",
+            "CONFIRMED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "constraints": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Constraints",
+          "type": "array"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/TechnicalOption"
+          },
+          "maxItems": 3,
+          "title": "Options",
+          "type": "array"
+        },
+        "recommendation_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recommendation Id"
+        },
+        "recommendation_reason": {
+          "anyOf": [
+            {
+              "maxLength": 8000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recommendation Reason"
+        },
+        "selected_option_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selected Option Id"
+        },
+        "confirmation_ref": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "minLength": 1,
+              "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confirmation Ref"
+        },
+        "research_required": {
+          "default": false,
+          "title": "Research Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "dimension",
+        "status"
+      ],
+      "title": "TechnicalDecision",
+      "type": "object"
+    },
+    "TechnicalOption": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "benefits": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Benefits",
+          "type": "array"
+        },
+        "tradeoffs": {
+          "items": {
+            "maxLength": 8000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Tradeoffs",
+          "type": "array"
+        },
+        "cost_notes": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Cost Notes",
+          "type": "string"
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "pattern": "^[a-z][a-z0-9+.-]*://[^\\s]+$",
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "benefits",
+        "tradeoffs",
+        "cost_notes"
+      ],
+      "title": "TechnicalOption",
+      "type": "object"
+    },
+    "TechnicalReview": {
+      "additionalProperties": false,
+      "properties": {
+        "applicability_reason": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "Applicability Reason",
+          "type": "string"
+        },
+        "decisions": {
+          "items": {
+            "$ref": "#/$defs/TechnicalDecision"
+          },
+          "title": "Decisions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "applicability_reason"
+      ],
+      "title": "TechnicalReview",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -440,6 +641,17 @@
     },
     "permissions": {
       "$ref": "#/$defs/PermissionBoundary"
+    },
+    "technical_review": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TechnicalReview"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "budget": {
       "$ref": "#/$defs/Budget"

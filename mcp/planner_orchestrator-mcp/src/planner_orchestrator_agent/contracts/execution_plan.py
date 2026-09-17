@@ -9,6 +9,7 @@ from typing import Literal
 from pydantic import Field, field_validator, model_validator
 
 from .common import Budget, ContractModel, ImmutableRef, ItemId, NonEmptyText, RetryLimits, SCHEMA_VERSION, ShortText, TaskId
+from .technical_review import TechnicalReview
 
 
 class Strategy(StrEnum):
@@ -69,6 +70,7 @@ class PlanNode(ContractModel):
     risk: NodeRisk
     parallel_group: ShortText | None = None
     side_effecting: bool = False
+    technical_decision_ids: list[ItemId] = Field(default_factory=list)
     failure_action: Literal["RETRY", "REPLAN", "REQUEST_APPROVAL", "ESCALATE", "COMPENSATE"]
 
 
@@ -90,6 +92,7 @@ class ExecutionPlan(ContractModel):
     nodes: list[PlanNode] = Field(min_length=1, max_length=100)
     acceptance_criteria: list[AcceptanceCriterion] = Field(min_length=1)
     permissions: PermissionBoundary = Field(default_factory=PermissionBoundary)
+    technical_review: TechnicalReview | None = None
     budget: Budget = Field(default_factory=Budget)
     retry_limits: RetryLimits = Field(default_factory=RetryLimits)
     termination_conditions: list[NonEmptyText] = Field(min_length=1)

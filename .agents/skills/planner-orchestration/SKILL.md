@@ -17,6 +17,7 @@ description: 将已有 TaskSpec 转成最小充分执行 DAG，选择 single mod
 ## 工作流
 
 1. 验证 TaskSpec ref、目标、范围、交付物、验收、权限和预算；不要重复询问已有事实。
+   在任务拆解前主动执行技术方案门，读取 [references/technical-planning.md](references/technical-planning.md)。相关选型不能因需求已 READY 而跳过；无需用户主动提醒。说明不适用的理由，不机械套用所有技术维度。
 2. 读取最小 capability/tool registry；只加载当前计划需要的项。
 3. 运行 complexity gate：simple 使用 single model；单领域少量工具使用 single agent + tools；多领域、多权限或高风险使用 multi-agent。
 4. 生成最小 DAG。每个节点包含 objective、dependencies、assigned capability、tools、input refs、expected output schema、producer/checker、权限、成本、风险和并行组。

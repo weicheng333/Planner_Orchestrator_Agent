@@ -19,7 +19,7 @@ from merge_codex_config import install_config, uninstall_config
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 PYTHON_PACKAGE_ROOT = PACKAGE_ROOT / "mcp" / "planner_orchestrator-mcp"
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 
 class PackageManagerError(RuntimeError):

@@ -16,7 +16,7 @@ def _fake_runtime(source: Path, destination: Path, python: Path) -> Path | None:
 def test_project_install_and_uninstall_preserve_data(tmp_path: Path) -> None:
     layout = resolve_layout("project", tmp_path)
     manifest = install_package(layout, Path("/usr/bin/python3"), runtime_builder=_fake_runtime)
-    assert manifest["version"] == "1.0.0"
+    assert manifest["version"] == "1.1.0"
     assert layout.agent.exists() and layout.skill.exists() and layout.manifest.exists()
     sentinel = layout.data / "keep.txt"
     sentinel.write_text("user data", encoding="utf-8")

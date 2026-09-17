@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "planner-orchestrator-agent"
-version = "1.0.0"
+version = "1.1.0"
 description = "面向 Codex 的最小充分执行 DAG 规划与协调 Agent"
 readme = "README.md"
 requires-python = ">=3.11"
