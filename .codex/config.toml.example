@@ -1,0 +1,9 @@
+[mcp_servers.planner_orchestrator_mcp]
+command = "/ABSOLUTE/PATH/TO/runtime/.venv/bin/python"
+args = ["-m", "planner_orchestrator_agent.mcp_server.server"]
+cwd = "/ABSOLUTE/PATH/TO/runtime"
+env = { PLANNER_ORCHESTRATOR_DATA_DIR = "/ABSOLUTE/PATH/TO/data" }
+enabled = true
+startup_timeout_sec = 20
+tool_timeout_sec = 45
+default_tools_approval_mode = "writes"

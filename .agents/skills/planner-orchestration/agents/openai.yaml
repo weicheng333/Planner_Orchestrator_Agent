@@ -1,0 +1,6 @@
+interface:
+  display_name: "Planner & Orchestrator Agent"
+  short_description: "把已确认 TaskSpec 转成最小充分执行 DAG"
+  default_prompt: "使用 $planner-orchestration 校验当前 TaskSpec，选择最低充分策略并生成可交接的执行计划。"
+policy:
+  allow_implicit_invocation: true
